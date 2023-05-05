@@ -5,5 +5,4 @@ export function observe(callback) {
 
 export function observable(req) {
     return req;
-
 }
