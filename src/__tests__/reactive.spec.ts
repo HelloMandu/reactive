@@ -5,24 +5,18 @@ const wait = (time = 1000 / 60) =>
 
 
 describe("reactive test", () => {
-  it('test', () => {
-    function compute() {
-      return 123
-    }
-    expect(compute()).toEqual(123);
-  })
   it("observable로 만든 객체가 observe 내에서 사용될 경우", async () => {
     const state = observable({ a: 1, b: 2 });
 
     let computed = '';
     function compute() {
-       computed = `a + b = ${state.a + state.b}`;
+      computed = `a + b = ${state.a + state.b}`;
     }
 
     observe(compute);
 
     expect(computed).toBe(`a + b = 3`);
-    state.b = 10;
+    state.a = 10;
 
     await wait();
 
@@ -30,6 +24,7 @@ describe("reactive test", () => {
     state.b = 20;
 
     await wait();
+
     expect(computed).toBe(`a + b = 30`);
   });
 
