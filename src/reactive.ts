@@ -21,7 +21,9 @@ export function observable(req) {
     let value = req[key];
     Object.defineProperty(state, key, {
       get () {
-        if (currentObserver) observers.add(currentObserver);
+        if (currentObserver) {
+          observers.add(currentObserver);
+        }
         return value;
       },
       set (newValue) {
