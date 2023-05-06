@@ -16,24 +16,21 @@ export function observe(callback) {
 }
 
 export function observable(req) {
-  const state: any = {}
-  for (const key of Object.keys(req)) {
-    let value = req[key];
-    Object.defineProperty(state, key, {
-      get () {
-        if (currentObserver) {
-          observers.add(currentObserver);
-        }
-        return value;
-      },
-      set (newValue) {
-        if (JSON.stringify(value) === JSON.stringify(newValue)) {
-          return;
-        }
-        value = newValue
-        observers.forEach(observer => observer())
+  const state: any = JSON.parse(JSON.stringify(req));
+  return new Proxy(state, {
+    get (target, key) {
+      if (currentObserver) {
+        observers.add(currentObserver);
       }
-    });
-  }
-  return state;
+      return state[key];
+    },
+    set(target, key, newValue): boolean {
+      if (JSON.stringify(target[key]) === JSON.stringify(newValue)) {
+        return true;
+      }
+      target [key] = newValue
+      observers.forEach(observer => observer())
+      return true;
+    }
+  });
 }
